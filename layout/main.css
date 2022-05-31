@@ -6,6 +6,14 @@ body, html {
     user-select: none;
 }
 
+h1, h4 {
+    text-align: center;
+}
+
+h1 {
+    font-size: min(5vw, 5vh);
+}
+
 .layout {
     width: 100vw;
     height: 100vh;
@@ -156,7 +164,7 @@ body, html {
 }
 
 .winner {
-    font-size: min(10vw, 10vh);
+    font-size: min(5vw, 5vh);
     color: #147f14;
     font-weight: 600;
     margin-bottom: min(3vw, 3vh);

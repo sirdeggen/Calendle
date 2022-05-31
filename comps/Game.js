@@ -79,9 +79,11 @@ export const Game = () => {
             placedShapes_copy.splice(i, 1)
             setPlacedShapes(placedShapes_copy)
 
-            const remainingShapes_copy = [...remainingShapes]
-            remainingShapes_copy.push(shapeName)
-            setRemainingShapes(remainingShapes_copy)
+            if (currentShape === shapeName) {
+                const remainingShapes_copy = [...remainingShapes]
+                remainingShapes_copy.push(shapeName)
+                setRemainingShapes(remainingShapes_copy)
+            }
         }
     }
 
@@ -127,12 +129,13 @@ export const Game = () => {
 
     return (
         <div id={'game'}>
-            <div className="count">{count} moves</div>
+            <h1>Calendle</h1>
             {winner && (
                 <div>
-                    <div className="winner">Winner!</div>
+                    <h1 className="winner">Winner!</h1>
                 </div>
             )}
+            <h4>{count} moves</h4>
             <div className="boardContainer">
                 <div className="board">
                     <Board
