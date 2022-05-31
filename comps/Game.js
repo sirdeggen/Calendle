@@ -49,10 +49,7 @@ export const Game = () => {
 
     const placeShape = () => {
         if (!winner && currentShape) {
-            const placedShapes_copy = placedShapes
-            placedShapes_copy.push(currentShape)
-            setPlacedShapes(placedShapes_copy)
-
+            setPlacedShapes(s => [...s, currentShape])
             setCurrentShape('')
             setCount(count + 1)
             findWinner()
@@ -145,6 +142,7 @@ export const Game = () => {
                         shapes={shapes}
                         updateBoard={setBoard}
                         onRemoveShape={removeShape}
+                        setCurrentShape={setCurrentShape}
                     />
                 </div>
                 <div>
@@ -153,17 +151,18 @@ export const Game = () => {
                             <button onClick={reset}>Reset</button>
                         </div>
                         <div>
-                            <button onClick={() => rotate(currentShape, 'left')}>Left</button>
-                            <button onClick={() => rotate(currentShape, 'vflip')}>V Flip</button>
-                            <button onClick={() => rotate(currentShape, 'hflip')}>H Flip</button>
-                            <button onClick={() => rotate(currentShape, 'right')}>Right</button>
+                            <button onClick={() => rotate(currentShape, 'left')}>&#8624;</button>
+                            <button onClick={() => rotate(currentShape, 'vflip')}>&#8597;</button>
+                            <button onClick={() => rotate(currentShape, 'hflip')}>&#8596;</button>
+                            <button onClick={() => rotate(currentShape, 'right')}>&#8626;</button>
                         </div>
                         <div className="selectedShape">
                             {currentShape && (
                                 <Shape
                                     shapes={shapes}
                                     shapeName={currentShape}
-                                    setCurrentShape={shapeName => setCurrentShape(shapeName)}
+                                    setCurrentShape={setCurrentShape}
+                                    setRemainingShapes={setRemainingShapes}
                                     currentShape={currentShape}
                                 />
                             )}

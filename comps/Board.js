@@ -3,14 +3,15 @@ import { ShapeNames } from './Helpers'
 
 import { Cell } from './Cell'
 
-export const Board = ({ board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, findWinner }) => {
+export const Board = ({ board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, setCurrentShape }) => {
     const onClickEmptyCell = (val, x, y) => {
         // check if space is occupied
         const existingShape = board[x][y][1]
 
-        if (ShapeNames.includes(existingShape)) {
+        if (currentShape === '' && ShapeNames.includes(existingShape)) {
             onRemoveShape(existingShape)
             removeShape(existingShape)
+            setCurrentShape(existingShape)
         } else if (currentShape) {
             // check if current shape can be placed
             const shapeMatrix = shapes[currentShape].matrix

@@ -1,17 +1,11 @@
-import {Game} from '../comps/Game'
+import { Game } from '../comps/Game'
+import React from 'react'
 
 const Home = () => {
     return (
-        <div
-                style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    minHeight: '80vh',
-                    padding: '10vh 0',
-                }}
-            >
+        <>
             <Game />
-        </div>
+        </>
     )
 }
 

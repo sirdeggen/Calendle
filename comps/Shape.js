@@ -8,7 +8,12 @@ export const Shape = props => {
     const shape = shapes[shapeName]
 
     const setCurrentShape = () => {
-        props.setCurrentShape(shapeName)
+        if (props.currentShape === shapeName) {
+            props.setRemainingShapes(x => [shapeName, ...x])
+            props.setCurrentShape('')
+        } else {
+            props.setCurrentShape(shapeName)
+        }
     }
 
     const matrix = shape.matrix
