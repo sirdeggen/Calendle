@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Board } from './Board'
 import { Shape } from './Shape'
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb'
-import {createGrid, ShapeNames, SHAPES} from '../lib/common'
+import { createGrid, ShapeNames, SHAPES } from '../lib/common'
 
 export const Game = () => {
     const [date, setDate] = useState(new Date())
@@ -42,7 +42,8 @@ export const Game = () => {
         winner && setCount(0)
     }
 
-    const findWinner = () => {
+    const findWinner = (placedShapes) => {
+        console.log({ placedShapes, remainingShapes, no: ShapeNames.length })
         if (placedShapes.length === ShapeNames.length && remainingShapes.length === 0) {
             setWinner(true)
         }
@@ -64,11 +65,15 @@ export const Game = () => {
     // };
 
     const placeShape = () => {
+        console.log({ winner, placedShapes })
         if (!winner && currentShape) {
-            setPlacedShapes(s => [...s, currentShape])
+            setPlacedShapes(s => {
+                console.log({ s, currentShape })
+                findWinner([...s, currentShape])
+                return [...s, currentShape]
+            })
             setCurrentShape('')
             setCount(count + 1)
-            findWinner()
         }
     }
 
