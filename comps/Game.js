@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { Board } from './Board'
 import { Shape } from './Shape'
 import { SHAPES, ShapeNames, createGrid } from './Helpers'
 
 export const Game = () => {
-    const [board, setBoard] = useState(createGrid())
+    const [board, setBoard] = useState(createGrid(new Date()))
     const [count, setCount] = useState(0)
     const [winner, setWinner] = useState(false)
     const [shapes, setShapes] = useState(SHAPES)
@@ -12,12 +12,8 @@ export const Game = () => {
     const [placedShapes, setPlacedShapes] = useState([])
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
-    // useEffect(() => {
-    //   document.addEventListener("keydown", (e) => move(e, currentShape));
-    // });
-
     const reset = () => {
-        setBoard(createGrid())
+        setBoard(createGrid(new Date()))
         setPlacedShapes([])
         setRemainingShapes(ShapeNames)
         setWinner(false)

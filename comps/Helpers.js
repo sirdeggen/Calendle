@@ -13,12 +13,10 @@ export const InitialBoard = [
     ['dead', 'dead', 'dead', 'dead', DaysOfWeek[4], DaysOfWeek[5], DaysOfWeek[6]],
 ]
 
-const date = new Date()
-const currentDate = date.getDate().toString()
-const currentMonth = Months[date.getMonth()]
-const currentDayOfWeek = DaysOfWeek[date.getDay()]
-
-export const createGrid = () => {
+export const createGrid = (date) => {
+    const currentDate = date.getDate().toString()
+    const currentMonth = Months[date.getMonth()]
+    const currentDayOfWeek = DaysOfWeek[date.getDay()]
     return InitialBoard.map(row =>
         row.map((cell, x) => {
             const isFree = cell !== currentDate && cell !== currentMonth && cell !== currentDayOfWeek && cell !== 'dead'
