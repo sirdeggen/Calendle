@@ -46,6 +46,18 @@ export const Game = () => {
         console.log({ placedShapes, remainingShapes, no: ShapeNames.length })
         if (placedShapes.length === ShapeNames.length && remainingShapes.length === 0) {
             setWinner(true)
+            fetch('/api/winCheck', {
+                method: 'POST',
+                body: JSON.stringify({ date, board }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(r => r.json())
+                .then(({ confirmed }) => {
+                    console.log({ confirmed })
+                })
         }
     }
 
