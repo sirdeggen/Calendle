@@ -3,7 +3,7 @@ import React from 'react'
 import { Cell } from './Cell'
 import { ShapeNames } from '../lib/common'
 
-export const Board = ({ board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, setCurrentShape }) => {
+export const Board = ({ date, board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, setCurrentShape }) => {
     const onClickEmptyCell = (val, x, y) => {
         // check if space is occupied
         const existingShape = board[x][y][1]
@@ -123,6 +123,7 @@ export const Board = ({ board, currentShape, onPlaceShape, updateBoard, shapes, 
                                 onClickEmptyCell={onClickEmptyCell}
                                 coord={[x, y]}
                                 board={board}
+                                date={date}
                             />
                         )
                     })}

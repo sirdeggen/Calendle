@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { getCellClassName } from './Helpers'
 import { DaysOfWeek, Months, ShapeNames } from '../lib/common'
 
-export const Cell = ({ value, coord, onClickEmptyCell, board }) => {
-    const date = new Date()
-
-    const [currentDate] = useState(date.getDate().toString())
-    const [currentMonth] = useState(Months[date.getMonth()])
-    const [currentDayOfWeek] = useState(DaysOfWeek[date.getDay()])
+export const Cell = ({ value, coord, onClickEmptyCell, board, date }) => {
+    const currentDate = date.getDate().toString()
+    const currentMonth = Months[date.getMonth()]
+    const currentDayOfWeek = DaysOfWeek[date.getDay()]
 
     let displayValue = value[1] === 0 ? value[0] : ''
     let cellClassName = ''

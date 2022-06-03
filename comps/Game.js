@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Board } from './Board'
 import { Shape } from './Shape'
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb'
-import { ShapeNames, SHAPES } from '../lib/common'
+import {createGrid, ShapeNames, SHAPES} from '../lib/common'
 
 export const Game = () => {
+    const [date, setDate] = useState(new Date())
     const [board, setBoard] = useState([])
     const [count, setCount] = useState(0)
     const [winner, setWinner] = useState(false)
@@ -14,16 +15,25 @@ export const Game = () => {
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
     useEffect(() => {
-        fetch('/api/board')
+        fetch('/api/date')
             .then(r => r.json())
-            .then(({ board }) => setBoard(board))
+            .then(({ date }) => {
+                const d = new Date(date)
+                console.log({ d })
+                setDate(d)
+                setBoard(createGrid(d))
+            })
             .catch(console.log)
     }, [])
 
     const reset = () => {
-        fetch('/api/board')
+        fetch('/api/date')
             .then(r => r.json())
-            .then(({ board }) => setBoard(board))
+            .then(({ date }) => {
+                const d = new Date(date)
+                setDate(d)
+                setBoard(createGrid(d))
+            })
             .catch(console.log)
         setPlacedShapes([])
         setRemainingShapes(ShapeNames)
@@ -145,6 +155,7 @@ export const Game = () => {
             <div className="boardContainer">
                 <div className="board">
                     <Board
+                        date={date}
                         board={board}
                         currentShape={currentShape}
                         onPlaceShape={placeShape}
