@@ -1,7 +1,7 @@
 import React from 'react'
-import { ShapeNames } from './Helpers'
 
 import { Cell } from './Cell'
+import { ShapeNames } from '../lib/common'
 
 export const Board = ({ board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, setCurrentShape }) => {
     const onClickEmptyCell = (val, x, y) => {

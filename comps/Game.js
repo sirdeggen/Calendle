@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Board } from './Board'
 import { Shape } from './Shape'
-import { SHAPES, ShapeNames, createGrid } from './Helpers'
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb'
+import { ShapeNames, SHAPES } from '../lib/common'
 
 export const Game = () => {
-    const [date, setDate] = useState(new Date())
-    const [board, setBoard] = useState(createGrid(date))
+    const [board, setBoard] = useState([])
     const [count, setCount] = useState(0)
     const [winner, setWinner] = useState(false)
     const [shapes, setShapes] = useState(SHAPES)
@@ -15,19 +14,23 @@ export const Game = () => {
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
     useEffect(() => {
-        const d = new Date()
-        setBoard(createGrid(d))
-        setDate(d)
+        fetch('/api/board')
+            .then(r => r.json())
+            .then(({ board }) => setBoard(board))
+            .catch(console.log)
     }, [])
 
-    const reset = useCallback(() => {
-        setBoard(createGrid(date))
+    const reset = () => {
+        fetch('/api/board')
+            .then(r => r.json())
+            .then(({ board }) => setBoard(board))
+            .catch(console.log)
         setPlacedShapes([])
         setRemainingShapes(ShapeNames)
         setWinner(false)
         setCurrentShape('')
         winner && setCount(0)
-    }, [date])
+    }
 
     const findWinner = () => {
         if (placedShapes.length === ShapeNames.length && remainingShapes.length === 0) {

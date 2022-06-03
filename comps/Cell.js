@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Months, DaysOfWeek, getCellClassName, ShapeNames } from './Helpers'
+import { getCellClassName } from './Helpers'
+import { DaysOfWeek, Months, ShapeNames } from '../lib/common'
 
 export const Cell = ({ value, coord, onClickEmptyCell, board }) => {
     const date = new Date()
