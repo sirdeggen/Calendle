@@ -2,7 +2,11 @@
   "name": "calendle",
   "version": "1.0.0",
   "description": "Calender Puzzle implementation by Laura Morgan, monetized by Deggen",
-  "keywords": ["calendar", "puzzle", "game"],
+  "keywords": [
+    "calendar",
+    "puzzle",
+    "game"
+  ],
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -14,7 +18,8 @@
     "next-connect": "^0.6.1",
     "prettier": "latest",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-icons": "^4.4.0"
   },
   "devDependencies": {
     "eslint": "latest",

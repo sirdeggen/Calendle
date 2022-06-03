@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Board } from './Board'
 import { Shape } from './Shape'
 import { SHAPES, ShapeNames, createGrid } from './Helpers'
+import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb'
 
 export const Game = () => {
     const [date, setDate] = useState(new Date())
@@ -156,10 +157,18 @@ export const Game = () => {
                             <button onClick={reset}>Reset</button>
                         </div>
                         <div>
-                            <button onClick={() => rotate(currentShape, 'left')}>&#8624;</button>
-                            <button onClick={() => rotate(currentShape, 'vflip')}>&#8597;</button>
-                            <button onClick={() => rotate(currentShape, 'hflip')}>&#8596;</button>
-                            <button onClick={() => rotate(currentShape, 'right')}>&#8626;</button>
+                            <button onClick={() => rotate(currentShape, 'left')}>
+                                <TbRotateClockwise2 style={{ transform: 'scaleY(-1)' }} />
+                            </button>
+                            <button onClick={() => rotate(currentShape, 'vflip')}>
+                                <TbArrowsVertical />
+                            </button>
+                            <button onClick={() => rotate(currentShape, 'hflip')}>
+                                <TbArrowsHorizontal />
+                            </button>
+                            <button onClick={() => rotate(currentShape, 'right')}>
+                                <TbRotateClockwise2 />
+                            </button>
                         </div>
                         <div className="selectedShape">
                             {currentShape && (
