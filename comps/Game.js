@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Board } from './Board'
 import { Shape } from './Shape'
 import { SHAPES, ShapeNames, createGrid } from './Helpers'
 
 export const Game = () => {
-    const [board, setBoard] = useState(createGrid(new Date()))
+    const [date, setDate] = useState(new Date())
+    const [board, setBoard] = useState(createGrid(date))
     const [count, setCount] = useState(0)
     const [winner, setWinner] = useState(false)
     const [shapes, setShapes] = useState(SHAPES)
@@ -12,15 +13,20 @@ export const Game = () => {
     const [placedShapes, setPlacedShapes] = useState([])
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
-    const reset = () => {
-        setBoard(createGrid(new Date()))
+    useEffect(() => {
+        const d = new Date()
+        setBoard(createGrid(d))
+        setDate(d)
+    }, [])
+
+    const reset = useCallback(() => {
+        setBoard(createGrid(date))
         setPlacedShapes([])
         setRemainingShapes(ShapeNames)
         setWinner(false)
         setCurrentShape('')
-
         winner && setCount(0)
-    }
+    }, [date])
 
     const findWinner = () => {
         if (placedShapes.length === ShapeNames.length && remainingShapes.length === 0) {
