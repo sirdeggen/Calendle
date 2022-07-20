@@ -4,6 +4,7 @@ body, html {
     font-family: sans-serif;
     background-color: #ffffff;
     user-select: none;
+    box-sizing: border-box;
 }
 
 h1, h4 {
@@ -30,13 +31,18 @@ h1 {
 
 .cell {
     border: 1px solid black;
+    font-size: min(2vw, 2vh);
     height: min(8vw, 8vh);
     width: min(8vw, 8vh);
-    font-size: min(2vw, 2vh);
     justify-content: center;
     align-items: center;
     display: flex;
     overflow: hidden;
+}
+
+.cellDimensions {
+    height: min(8vw, 8vh);
+    width: min(8vw, 8vh);
 }
 
 .emptyCell {
@@ -57,30 +63,6 @@ h1 {
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: row;
-}
-
-.heightNoBorder {
-    height: calc(min(8vw, 8vh) + 2px);
-}
-
-.heightOneBorder {
-    height: calc(min(8vw, 8vh) + 1px);
-}
-
-.heightTwoBorder {
-    height: min(8vw, 8vh);
-}
-
-.widthNoBorder {
-    width: calc(min(8vw, 8vh) + 2px);
-}
-
-.widthOneBorder {
-    width: calc(min(8vw, 8vh) + 1px);
-}
-
-.widthTwoBorder {
-    width: min(8vw, 8vh);
 }
 
 .highlight {
@@ -179,4 +161,66 @@ h1 {
 button {
     padding: 10px;
     font-size: 20px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    height: 6vh;
+    min-height: 42px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    color: #000000;
+    border-bottom: 1px solid #3a3a3c;
+}
+
+.header .left {
+    width: 20vw;
+    margin-left: 3vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 2vw;
+}
+
+.header .center {
+    font-size: 28px;
+    font-weight: 600;
+    min-width: 35px;
+}
+
+.header .right {
+    width: 20vw;
+    margin-right: 3vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 2vw;
+}
+
+.header .icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* .dialog-demo .p-button {
+    margin: 0 .5rem 0 0;
+    min-width: 10rem;
+}
+
+.dialog-demo p {
+    margin: 0;
+    line-height: 1.5;
+} */
+
+/* .dialog-demo .p-dialog .p-button {
+    min-width: 6rem;
+} */
+
+.p-dialog-mask .p-dialog {
+    margin: 8vw;
 }
