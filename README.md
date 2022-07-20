@@ -1,2 +1,2 @@
 # Calendar Puzzle Game
-Collab
+Collab game in which Vanessa cannot cheat.
