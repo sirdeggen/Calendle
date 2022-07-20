@@ -1,5 +1,6 @@
 import React from 'react';
 import { Dialog } from 'primereact/dialog';
+import { Stats } from './Stats';
 
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css'
@@ -46,7 +47,7 @@ export const Header = () => {
                 breakpoints={{'960px': '75vw', '640px': '100vw'}}
             >
                 <div>
-                    <p>Coming soon!</p>
+                    <Stats />
                 </div>
             </Dialog>
 
