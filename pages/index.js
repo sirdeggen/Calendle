@@ -3,10 +3,11 @@ import React from 'react'
 import { Header } from '../components/Header'; 
 
 const Home = () => {
+    const date = new Date();
     return (
         <>
             <Header />
-            <Game />
+            <Game key={date.toDateString()}/>
         </>
     )
 }

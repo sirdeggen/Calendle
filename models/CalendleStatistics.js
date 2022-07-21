@@ -1,4 +1,5 @@
 const Default = 0;
+const STORAGE_KEY = 'calendle-statistics';
 
 export class CalendleStatistics {
     _gamesPlayed
@@ -10,7 +11,7 @@ export class CalendleStatistics {
     _winValues
 
     constructor() {
-        this.getCurrentStats();
+        this.getEmptyStats();
     }
 
     get GamesPlayed() { return this._gamesPlayed; }
@@ -21,39 +22,44 @@ export class CalendleStatistics {
     get LastUpdatedDate() { return this._lastUpdatedDate; }
     get WinValues() { return this._winValues; }
 
-    setGamesPlayed(val) { this._gamesPlayed = val; return this;}
-    setGamesWon(val) { this._gamesWon = val; return this;}
+    incrementGamesPlayed() { this._gamesPlayed = this._gamesPlayed + 1; return this;}
+    incrementGamesWon() { this._gamesWon = this._gamesWon + 1; return this;}
     setCurrentStreak(val) { this._currentStreak = val; return this;}
     setMaxStreak(val) { this._maxStreak = val; return this;}
     setLastWinDate(val) { this._lastWinDate = val; return this;}
-    setLastUpdatedDate(val) { this._lastUpdatedDate = val; return this;}
-    setWinValues(val) { this._winValues = val; return this;}
+    addWinValue(val) { this._winValues.push(val); return this;}
+    setLastUpdatedDate() {this._lastUpdatedDate = new Date().toDateString(); return this;}
 
     resetCurrentStreak() {this._currentStreak = Default; return this;}
 
-    getCurrentStats() {
-        const stats = JSON.parse(window.localStorage.getItem('calendle-stats'));
-        this._gamesPlayed = stats ? stats.gamesPlayed : Default;
-        this._gamesWon = stats ? stats.gamesWon : Default;
-        this._currentStreak = stats ? stats.currentStreak : Default;
-        this._maxStreak = stats ? stats.maxStreak : Default;
-        this._lastWinDate = stats ? stats.lastWinDate : undefined;
-        this._lastUpdatedDate = stats ? stats.lastUpdatedDate : undefined;
-        this._winValues = stats ? stats.winValues : [];
+    initialize() {
+        const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY));
+        this._gamesPlayed = data ? data._gamesPlayed : Default;
+        this._gamesWon = data ? data._gamesWon : Default;
+        this._currentStreak = data ? data._currentStreak : Default;
+        this._maxStreak = data ? data._maxStreak : Default;
+        this._lastWinDate = data ? data._lastWinDate : undefined;
+        this._lastUpdatedDate = data ? data._lastUpdatedDate : undefined;
+        this._winValues = data ? data._winValues : [];
+
+        this.update();
+        return this;
+    }
+
+    getEmptyStats() {
+        this._gamesPlayed = Default;
+        this._gamesWon = Default;
+        this._currentStreak = Default;
+        this._maxStreak = Default;
+        this._lastWinDate = undefined;
+        this._lastUpdatedDate = undefined;
+        this._winValues = [];
     }
 
     update() {
-        const newStats = {
-            gamesPlayed: this._gamesPlayed,
-            gamesWon: this._gamesWon,
-            currentStreak: this._currentStreak,
-            maxStreak: this._maxStreak,
-            lastWinDate: this._lastWinDate,
-            lastUpdatedDate: this._lastUpdatedDate,
-            winValues: this._winValues
-        }
+        this.setLastUpdatedDate();
 
-        window.localStorage.setItem('calendle-statistics', JSON.stringify(newStats));
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this));
     }
 
     onWin(date, winValue) {
@@ -66,9 +72,9 @@ export class CalendleStatistics {
 
         this.setCurrentStreak(currentStreak)
             .setMaxStreak(maxStreak)
-            .setGamesWon(this.GamesWon + 1)
+            .incrementGamesWon()
             .setLastWinDate(date.toDateString())
-            .setWinValues(this.WinValues.push(winValue))
+            .addWinValue(winValue)
             .update();
     }
 

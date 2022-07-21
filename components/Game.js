@@ -4,6 +4,7 @@ import { Shape } from './Shape'
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb'
 import { createGrid, ShapeNames, SHAPES } from '../lib/common'
 import { CalendleStatistics } from '../models/CalendleStatistics';
+import { CalendleState } from '../models/CalendleState'
 
 // todo: on load, if calendle-state.date doesn't match today, reset calendle-state
 // on place piece, check last updated date. if today, don't update gamesPlayed. if not today, update games played
@@ -28,61 +29,52 @@ export const Game = () => {
     const [placedShapes, setPlacedShapes] = useState([])
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
+    const [statistics] = useState(new CalendleStatistics());
+    const [gameState] = useState(new CalendleState());
+
     useEffect(() => {
         const today = new Date();
         setDate(today);
 
-        const currentState = JSON.parse(window.localStorage.getItem('calendle-state'));
-        if (!currentState || !currentState.count || !currentState.board || currentState.winner === undefined) {
+        statistics.initialize();
+        gameState.initialize();
+
+        // if new day - reset game board and game state
+        if (gameState.Date !== today.toDateString() 
+        || (gameState.Count === 0 && gameState.Board.length === 0 && gameState.PlacedShapes.length === 0)) {
             setBoard(createGrid(today))
-        } else {
-            // set board, count, winner
-            setBoard(currentState.board);
-            setCount(currentState.count);
-            setWinner(currentState.winner);
-            setPlacedShapes(currentState.placedShapes);
-            setRemainingShapes(ShapeNames.filter(x => !currentState.placedShapes.includes(x)));
-        }
+            gameState.reset();
 
-        // on game load - update stats
-        if (!currentState || (currentState && currentState.date !== today)) {
-            const stats = new CalendleStatistics();
-            //JSON.parse(window.localStorage.getItem('calendle-stats'));
-            
             // update streak - if last win date != yesterday, reset current streak
-            if (stats.LastWinDate !== getYesterdayDateString(date)) {
-                stats.resetCurrentStreak().update();
+            if (statistics.LastWinDate !== getYesterdayDateString(date)) {
+                statistics.resetCurrentStreak().update();
             }
-
-            // const newStats = {
-            //     gamesPlayed: stats ? stats.gamesPlayed : 0,
-            //     currentStreak: currentStreak,
-            //     maxStreak: stats ? stats.maxStreak : 0,
-            //     gamesWon: stats ? stats.gamesWon : 0,
-            //     lastWinDate: stats ? stats.lastWinDate : undefined,
-            //     lastUpdatedDate: today.toDateString()
-            // }
-
-            // window.localStorage.setItem('calendle-stats', JSON.stringify(newStats));
+        } else {
+            // set board, count, winner from gameState
+            setBoard(gameState.Board);
+            setCount(gameState.Count);
+            setWinner(gameState.Winner);
+            setPlacedShapes(gameState.PlacedShapes);
+            setRemainingShapes(ShapeNames.filter(x => !gameState.PlacedShapes.includes(x)));
         }
-
     }, [])
 
     useEffect(() => {
-        // when shape is placed, update the current state
-        const currentState = window.localStorage.getItem('calendle-state');
-
-        if (count > 0 && (!currentState || (currentState && currentState.count !== count))) {
-            const state = {
-                date: date.toDateString(),
-                count: count,
-                winner: winner,
-                board: board,
-                placedShapes: placedShapes
-            };
-    
-            window.localStorage.setItem('calendle-state', JSON.stringify(state));
+        // if first shaped placed todya, increment games played count
+        if (count === 1 && gameState.Count === 0) {
+            statistics.incrementGamesPlayed().update();
         }
+        
+        // when shape is placed, if the count has increased, update game state
+        if (count > 0 && gameState.Count !== count) {
+            gameState.incrementCount()
+                .setWinner(winner)
+                .setBoard(board)
+                .setPlacedShapes(placedShapes)
+                .update();
+        }
+
+        
     }, [count])
 
     const reset = () => {
@@ -97,7 +89,6 @@ export const Game = () => {
     }
 
     const findWinner = (placedShapes) => {
-        console.log({ placedShapes, remainingShapes, no: ShapeNames.length })
         if (placedShapes.length === ShapeNames.length && remainingShapes.length === 0) {
             fetch('/api/winCheck', {
                 method: 'POST',
@@ -109,50 +100,18 @@ export const Game = () => {
             })
                 .then(r => r.json())
                 .then(({ confirmed }) => {
-                    onWin(confirmed)
-                    console.log({ confirmed })
+                    setWinner(confirmed)
+                    if (winner) {
+                        statistics.onWin(date, count+1);
+                        gameState.onWin();
+                    }
                 })
         }
     }
 
-    const onWin = (confirmed) => {
-        if (confirmed) {
-            setWinner(confirmed)
-            const stats = new CalendleStatistics().onWin(date, count+1);
-            //JSON.parse(window.localStorage.getItem('calendle-stats'));
-            
-            // if lastWinDate = yesterday - increase currentStreak and maxStreak by 1
-            // gamesPlayed, gamesWon, currentStreak, maxStreak, lastWinDate, values: []
-
-            // const currentStreak = stats.CurrentStreak + 1;
-            // let maxStreak = stats.MaxStreak;
-            // if (currentStreak > maxStreak) {
-            //     maxStreak = currentStreak;
-            // } 
-
-            // stats.setCurrentStreak(currentStreak)
-            //     .setMaxStreak(maxStreak)
-            //     .setGamesWon(stats.GamesWon + 1)
-            //     .setLastWinDate(date.toDateString())
-            //     .update();
-
-            // const newStats = {
-            //     gamesPlayed: stats ? stats.gamesPlayed : 1,
-            //     currentStreak: currentStreak,
-            //     maxStreak: maxStreak,
-            //     gamesWon: stats && stats.gamesWon ? stats.gamesWon + 1 : 1,
-            //     lastWinDate: date.toDateString()
-            // }
-
-            // window.localStorage.setItem('calendle-stats', JSON.stringify(newStats));
-        }
-    }
-
     const placeShape = () => {
-        console.log({ winner, placedShapes })
         if (!winner && currentShape) {
             setPlacedShapes(s => {
-                console.log({ s, currentShape })
                 findWinner([...s, currentShape])
                 return [...s, currentShape]
             })
@@ -249,6 +208,7 @@ export const Game = () => {
                         updateBoard={setBoard}
                         onRemoveShape={removeShape}
                         setCurrentShape={setCurrentShape}
+                        winner={winner}
                     />
                 </div>
                 <div>

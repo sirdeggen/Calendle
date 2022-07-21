@@ -3,12 +3,12 @@ import React from 'react'
 import { Cell } from './Cell'
 import { ShapeNames } from '../lib/common'
 
-export const Board = ({ date, board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, setCurrentShape }) => {
+export const Board = ({ date, board, currentShape, onPlaceShape, updateBoard, shapes, onRemoveShape, setCurrentShape, winner }) => {
     const onClickEmptyCell = (val, x, y) => {
         // check if space is occupied
         const existingShape = board[x][y][1]
 
-        if (currentShape === '' && ShapeNames.includes(existingShape)) {
+        if (currentShape === '' && ShapeNames.includes(existingShape) && !winner) {
             onRemoveShape(existingShape)
             removeShape(existingShape)
             setCurrentShape(existingShape)
