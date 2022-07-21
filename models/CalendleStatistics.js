@@ -1,7 +1,9 @@
 const Default = 0;
 const STORAGE_KEY = 'calendle-statistics';
 
+// LocalStorage object to store all-up stats
 export class CalendleStatistics {
+    // private members
     _gamesPlayed
     _gamesWon
     _currentStreak
@@ -10,10 +12,12 @@ export class CalendleStatistics {
     _lastUpdatedDate
     _winValues
 
+    // constructor instantiates with empty object
     constructor() {
         this.getEmptyStats();
     }
 
+    // getters
     get GamesPlayed() { return this._gamesPlayed; }
     get GamesWon() { return this._gamesWon; }
     get CurrentStreak() { return this._currentStreak; }
@@ -22,6 +26,7 @@ export class CalendleStatistics {
     get LastUpdatedDate() { return this._lastUpdatedDate; }
     get WinValues() { return this._winValues; }
 
+    // setters
     incrementGamesPlayed() { this._gamesPlayed = this._gamesPlayed + 1; return this;}
     incrementGamesWon() { this._gamesWon = this._gamesWon + 1; return this;}
     setCurrentStreak(val) { this._currentStreak = val; return this;}
@@ -32,6 +37,7 @@ export class CalendleStatistics {
 
     resetCurrentStreak() {this._currentStreak = Default; return this;}
 
+    // initialize with data from LocalStorage
     initialize() {
         const data = JSON.parse(window.localStorage.getItem(STORAGE_KEY));
         this._gamesPlayed = data ? data._gamesPlayed : Default;
@@ -46,6 +52,7 @@ export class CalendleStatistics {
         return this;
     }
 
+    // get empty object
     getEmptyStats() {
         this._gamesPlayed = Default;
         this._gamesWon = Default;
@@ -54,14 +61,17 @@ export class CalendleStatistics {
         this._lastWinDate = undefined;
         this._lastUpdatedDate = undefined;
         this._winValues = [];
+        return this;
     }
 
+    // update local storage
     update() {
         this.setLastUpdatedDate();
-
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this));
+        return this;
     }
 
+    // set win statistics
     onWin(date, winValue) {
         // on win, update current streak, max streak, games won, last win date, and winValues
         const currentStreak = this.CurrentStreak + 1;
@@ -76,6 +86,8 @@ export class CalendleStatistics {
             .setLastWinDate(date.toDateString())
             .addWinValue(winValue)
             .update();
+
+        return this;
     }
 
 

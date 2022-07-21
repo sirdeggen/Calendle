@@ -6,13 +6,6 @@ import { createGrid, ShapeNames, SHAPES } from '../lib/common'
 import { CalendleStatistics } from '../models/CalendleStatistics';
 import { CalendleState } from '../models/CalendleState'
 
-// todo: on load, if calendle-state.date doesn't match today, reset calendle-state
-// on place piece, check last updated date. if today, don't update gamesPlayed. if not today, update games played
-
-// state:
-// key: calendle-state: date, count, winner, board, placed shapes
-// key: calendle-statistics: gamesPlayed, gamesWon, currentStreak, maxStreak, lastWinDate, lastupdatedDate, values: []
-
 const getYesterdayDateString = (today) => {
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1)
@@ -29,6 +22,7 @@ export const Game = () => {
     const [placedShapes, setPlacedShapes] = useState([])
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
+    // create empty objects
     const [statistics] = useState(new CalendleStatistics());
     const [gameState] = useState(new CalendleState());
 
@@ -36,10 +30,11 @@ export const Game = () => {
         const today = new Date();
         setDate(today);
 
+        // initialize from LocalStorage
         statistics.initialize();
         gameState.initialize();
 
-        // if new day - reset game board and game state
+        // if new day or empty board - reset game board and game state
         if (gameState.Date !== today.toDateString() 
         || (gameState.Count === 0 && gameState.Board.length === 0 && gameState.PlacedShapes.length === 0)) {
             setBoard(createGrid(today))
@@ -60,7 +55,7 @@ export const Game = () => {
     }, [])
 
     useEffect(() => {
-        // if first shaped placed todya, increment games played count
+        // if first shaped placed today, increment games played
         if (count === 1 && gameState.Count === 0) {
             statistics.incrementGamesPlayed().update();
         }
@@ -73,8 +68,6 @@ export const Game = () => {
                 .setPlacedShapes(placedShapes)
                 .update();
         }
-
-        
     }, [count])
 
     const reset = () => {
@@ -100,6 +93,7 @@ export const Game = () => {
             })
                 .then(r => r.json())
                 .then(({ confirmed }) => {
+                    // on win - set state and update stats
                     setWinner(confirmed)
                     if (winner) {
                         statistics.onWin(date, count+1);
