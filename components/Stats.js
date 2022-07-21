@@ -9,6 +9,7 @@ export const Stats = () => {
 
     return (
         <div>
+            <p><b>This is a beta feature</b></p>
             <p>Games played: {stats.GamesPlayed}</p>
             <p>Games won: {stats.GamesWon}</p>
             <p>Win %: {winPercent}</p>
