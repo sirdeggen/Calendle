@@ -60,7 +60,7 @@ export class CalendleState {
 
     // reset to empty state
     reset() {
-        this.getEmptyState().this.update();
+        this.getEmptyState().update();
         return this;
     }
 
