@@ -95,7 +95,7 @@ export const Game = () => {
                 .then(({ confirmed }) => {
                     // on win - set state and update stats
                     setWinner(confirmed)
-                    if (winner) {
+                    if (confirmed) {
                         statistics.onWin(date, count+1);
                         gameState.onWin();
                     }
