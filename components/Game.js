@@ -3,6 +3,14 @@ import { Board } from './Board'
 import { Shape } from './Shape'
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb'
 import { createGrid, ShapeNames, SHAPES } from '../lib/common'
+import { CalendleStatistics } from '../models/CalendleStatistics';
+import { CalendleState } from '../models/CalendleState'
+
+const getYesterdayDateString = (today) => {
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1)
+    return yesterday.toDateString();
+}
 
 export const Game = () => {
     const [date, setDate] = useState(new Date())
@@ -14,34 +22,51 @@ export const Game = () => {
     const [placedShapes, setPlacedShapes] = useState([])
     const [remainingShapes, setRemainingShapes] = useState(ShapeNames)
 
-    useEffect(() => {
-        const d = new Date();
-        setDate(d);
+    // create empty objects
+    const [statistics] = useState(new CalendleStatistics());
+    const [gameState] = useState(new CalendleState());
 
-        const currentStat = JSON.parse(window.localStorage.getItem(d.toDateString()));
-        if (!currentStat || !currentStat.count || !currentStat.board || currentStat.winner === undefined) {
-            setBoard(createGrid(d))
+    useEffect(() => {
+        const today = new Date();
+        setDate(today);
+
+        // initialize from LocalStorage
+        statistics.initialize();
+        gameState.initialize();
+
+        // if new day or empty board - reset game board and game state
+        if (gameState.Date !== today.toDateString() 
+        || (gameState.Count === 0 && gameState.Board.length === 0 && gameState.PlacedShapes.length === 0)) {
+            setBoard(createGrid(today))
+            gameState.reset();
+
+            // update streak - if last win date != yesterday, reset current streak
+            if (statistics.LastWinDate !== getYesterdayDateString(date)) {
+                statistics.resetCurrentStreak().update();
+            }
         } else {
-            // set board, count, winner
-            setBoard(currentStat.board);
-            setCount(currentStat.count);
-            setWinner(currentStat.winner);
-            setPlacedShapes(currentStat.placedShapes);
-            setRemainingShapes(ShapeNames.filter(x => !currentStat.placedShapes.includes(x)));
+            // set board, count, winner from gameState
+            setBoard(gameState.Board);
+            setCount(gameState.Count);
+            setWinner(gameState.Winner);
+            setPlacedShapes(gameState.PlacedShapes);
+            setRemainingShapes(ShapeNames.filter(x => !gameState.PlacedShapes.includes(x)));
         }
     }, [])
 
     useEffect(() => {
-        const currentStat = window.localStorage.getItem(date.toDateString());
-        if (count > 0 && (!currentStat || (currentStat && currentStat.count !== count))) {
-            const stat = {
-                count: count,
-                winner: winner,
-                board: board,
-                placedShapes: placedShapes
-            };
-    
-            window.localStorage.setItem(date.toDateString(), JSON.stringify(stat));
+        // if first shaped placed today, increment games played
+        if (count === 1 && gameState.Count === 0) {
+            statistics.incrementGamesPlayed().update();
+        }
+        
+        // when shape is placed, if the count has increased, update game state
+        if (count > 0 && gameState.Count !== count) {
+            gameState.incrementCount()
+                .setWinner(winner)
+                .setBoard(board)
+                .setPlacedShapes(placedShapes)
+                .update();
         }
     }, [count])
 
@@ -57,12 +82,10 @@ export const Game = () => {
     }
 
     const findWinner = (placedShapes) => {
-        console.log({ placedShapes, remainingShapes, no: ShapeNames.length })
         if (placedShapes.length === ShapeNames.length && remainingShapes.length === 0) {
-            setWinner(true)
             fetch('/api/winCheck', {
                 method: 'POST',
-                body: JSON.stringify({ date, board }),
+                body: JSON.stringify({ board }),
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -70,21 +93,24 @@ export const Game = () => {
             })
                 .then(r => r.json())
                 .then(({ confirmed }) => {
-                    console.log({ confirmed })
+                    // on win - set state and update stats
+                    setWinner(confirmed)
+                    if (winner) {
+                        statistics.onWin(date, count+1);
+                        gameState.onWin();
+                    }
                 })
         }
     }
 
     const placeShape = () => {
-        console.log({ winner, placedShapes })
         if (!winner && currentShape) {
             setPlacedShapes(s => {
-                console.log({ s, currentShape })
                 findWinner([...s, currentShape])
                 return [...s, currentShape]
             })
-            setCurrentShape('')
             setCount(count + 1)
+            setCurrentShape('')
         }
     }
 
@@ -176,6 +202,7 @@ export const Game = () => {
                         updateBoard={setBoard}
                         onRemoveShape={removeShape}
                         setCurrentShape={setCurrentShape}
+                        winner={winner}
                     />
                 </div>
                 <div>
