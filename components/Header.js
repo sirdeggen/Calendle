@@ -6,9 +6,8 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css'
 import 'primeicons/primeicons.css';
 
-export const Header = () => {
+export const Header = ({statsDialogVisible, setStatsDialogVisible}) => {
     const [helpDialogVisible, setHelpDialogVisible] = React.useState(false);
-    const [statsDialogVisible, setStatsDialogVisible] = React.useState(false);
     const [settingsDialogVisible, setSettingsDialogVisible] = React.useState(false);
 
     return (
