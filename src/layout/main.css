@@ -145,6 +145,10 @@ h1 {
     border-bottom: 1px solid black;
 }
 
+.exterior {
+    border-width: 2px;
+}
+
 .winner {
     font-size: min(5vw, 5vh);
     color: #147f14;

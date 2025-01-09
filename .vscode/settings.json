@@ -1,0 +1,6 @@
+{
+    "liveServer.settings.CustomBrowser": "chrome",
+    "javascript.implicitProjectConfig.checkJs": true,
+    "sourceMaps": true
+    // ...existing settings...
+}
