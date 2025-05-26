@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { getCellClassName } from './Helpers'
+import { getShapeClassName } from '../utils/borderClassNames'
 
 export const Shape = props => {
     const shapes = props.shapes
@@ -19,12 +19,12 @@ export const Shape = props => {
     const matrix = shape.matrix
 
     return (
-        <div key={shapeName} className={'shape '}>
+        <div key={shapeName} className={'shape'}>
             {matrix.map((row, x) => {
                 return (
                     <div key={'row_' + x} className={'shapeRow'}>
                         {row.map((cell, y) => {
-                            const className = getCellClassName(matrix, cell, x, y, props.currentShape === shapeName)
+                            const className = getShapeClassName(matrix, cell, x, y, props.currentShape === shapeName)
                             return (
                                 <div key={cell + '_' + x + '_' + y} className={className} onClick={setCurrentShape} />
                             )

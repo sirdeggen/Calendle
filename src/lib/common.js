@@ -1,6 +1,7 @@
-export const ShapeNames = ['H', 'I', 'L', 'T', 'S', 'N', 'P', 'Z', 'V', 'F']
+export const ShapeNames = ['H', 'I', 'L', 'T', 'S', 'N', 'P', 'Z', 'V', 'F'];
 export const DaysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
 export const Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
 export const InitialBoard = [
     [Months[0], Months[1], Months[2], Months[3], Months[4], Months[5], 'dead'],
     [Months[6], Months[7], Months[8], Months[9], Months[10], Months[11], 'dead'],
@@ -10,7 +11,8 @@ export const InitialBoard = [
     ['22', '23', '24', '25', '26', '27', '28'],
     ['29', '30', '31', DaysOfWeek[0], DaysOfWeek[1], DaysOfWeek[2], DaysOfWeek[3]],
     ['dead', 'dead', 'dead', 'dead', DaysOfWeek[4], DaysOfWeek[5], DaysOfWeek[6]],
-]
+];
+
 export const SHAPES = {
     I: {
         matrix: [['I'], ['I'], ['I'], ['I']],
@@ -90,16 +92,20 @@ export const SHAPES = {
         ],
         size: 5,
     },
-}
+};
 
 export const createGrid = (date) => {
     const currentDate = date.getDate().toString()
     const currentMonth = Months[date.getMonth()]
     const currentDayOfWeek = DaysOfWeek[date.getDay()]
-    return InitialBoard.map(row =>
+    const board = InitialBoard;
+    return board.map(row =>
         row.map((cell, x) => {
-            const isFree = cell !== currentDate && cell !== currentMonth && cell !== currentDayOfWeek && cell !== 'dead'
-            return [cell, isFree ? 0 : -1]
+            const isCurrentDate = cell === currentDate || cell === currentMonth || cell === currentDayOfWeek;
+            const isDead = cell === 'dead';
+
+            const val = isDead ? 'dead' : isCurrentDate ? -1 : 0;
+            return [cell, val]
         })
     )
 }

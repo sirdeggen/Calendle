@@ -1,0 +1,116 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    height: 6vh;
+    min-height: 42px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    color: #000000;
+    border-bottom: 1px solid #3a3a3c;
+    padding: 10px 20px;
+    font-family: sans-serif;
+}
+
+.header.light {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+.header.dark {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.header .left {
+    width: 20vw;
+    margin-left: 3vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 2vw;
+}
+
+.header .center {
+    font-size: 28px;
+    font-weight: 600;
+    min-width: 35px;
+}
+
+.header .right {
+    width: 20vw;
+    margin-right: 3vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 2vw;
+}
+
+.header .icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.left, .center, .right {
+    display: flex;
+    align-items: center;
+}
+
+.center {
+    flex-grow: 1;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Dialog styles */
+:root {
+    --dialog-background-light: #f8f9fa;
+    --dialog-color-light: #212529;
+    --dialog-background-dark: #343a40;
+    --dialog-color-dark: #f8f9fa;
+}
+
+.p-dialog.light {
+    background-color: var(--dialog-background-light);
+    color: var(--dialog-color-light);
+}
+
+.p-dialog.dark {
+    background-color: var(--dialog-background-dark);
+    color: var(--dialog-color-dark);
+}
+
+.p-dialog.light .p-dialog-content, .p-dialog.light .p-dialog-titlebar, .p-dialog.light .p-dialog-header {
+    background-color: var(--dialog-background-light);
+    color: var(--dialog-color-light);
+}
+
+.p-dialog.dark .p-dialog-content, .p-dialog.dark .p-dialog-titlebar, .p-dialog.dark .p-dialog-header {
+    background-color: var(--dialog-background-dark);
+    color: var(--dialog-color-dark);
+}
+
+.setting-item {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.setting-item label {
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+.setting-item input[type="checkbox"] {
+    margin-right: 10px;
+}

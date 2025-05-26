@@ -11,7 +11,6 @@ export const Board = ({ date, board, currentShape, onPlaceShape, updateBoard, sh
         if (currentShape === '' && ShapeNames.includes(existingShape) && !winner) {
             onRemoveShape(existingShape)
             removeShape(existingShape)
-            setCurrentShape(existingShape)
         } else if (currentShape) {
             // check if current shape can be placed
             const shapeMatrix = shapes[currentShape].matrix

@@ -1,6 +1,6 @@
 import React from 'react';
-import { CalendleState } from '../models/CalendleState';
-import { CalendleStatistics } from '../models/CalendleStatistics';
+import { CalendleState } from '../../models/CalendleState';
+import { CalendleStatistics } from '../../models/CalendleStatistics';
 
 export const Stats = () => {
     const stats = new CalendleStatistics().initialize();

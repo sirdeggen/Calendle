@@ -1,2 +1,3 @@
-# Calendar Puzzle Game
-Collab game in which Vanessa cannot cheat.
+# Calendle
+
+A daily calendar puzzle game

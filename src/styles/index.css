@@ -1,0 +1,54 @@
+:root {
+    --background-light: white;
+    --background-dark: #222222;
+    --text-light: #222222;
+    --text-dark: white;
+    --shape-color: #3d7f92;
+    --selected-color: #8d2929;
+    --selected-color-dark: #A83C3C;
+    --current-date-color: #ffc600;
+    --current-date-color-dark: #be9200;
+    --border-color-light: #222222;
+    --border-color-dark: #ECEFF1;
+    --dead-border-color: transparent;
+    --winner-color: #147f14;
+    --button-color: #DDDDDD;
+    --button-color-dark: #999999  ;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding-bottom: 20px;
+}
+
+body.light {
+    background-color: var(--background-light);
+    color: var(--text-light);
+}
+
+body.dark {
+    background-color: var(--background-dark);
+    color: var(--text-dark);
+}
+
+h1, h4 {
+    text-align: center;
+}
+
+h1 {
+    font-size: min(5vw, 5vh);
+    margin-top: 3vh;
+    margin-bottom: 1vh;
+}

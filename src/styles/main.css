@@ -1,0 +1,171 @@
+.game {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4vh
+}
+
+.board {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    font-size: min(2vw, 2vh);
+    height: min(8vw, 8vh);
+    width: min(8vw, 8vh);
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.shapeCell {
+    margin: -1px;
+    height: min(4vw, 4vh);
+    width: min(4vw, 4vh);
+}
+
+.emptyCell {
+    border: 1px solid transparent;
+    height: min(8vw, 8vh);
+    width: min(8vw, 8vh);
+}
+
+.shapeRow {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+}
+
+.shapeColor {
+    background-color: var(--shape-color);
+    display: flex;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: var(--selected-color);
+}
+
+body.dark .selected {
+    background-color: var(--selected-color-dark);
+}
+
+.flexDirectionRow {
+    flex-direction: row;
+}
+
+.flexDirectionColumn {
+    flex-direction: column;
+}
+
+.flexDirectionRowReverse {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.flexDirectionColumnReverse {
+    flex-direction: column-reverse;
+}
+
+
+.shapesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    row-gap: 20px;
+    justify-content: center;
+    height: 100%;
+    align-content: center;
+}
+
+.shape {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.boardContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 5vw;
+}
+
+.rightContentContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: min(3vw, 3vh);
+    width: 28vw;
+    min-width: 12vh;
+    height:100%;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: min(3vw, 3vh);
+    width: 28vw;
+    min-width: 12vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.rotateButtons {
+    display: flex;
+    flex-direction: row;
+    column-gap: min(1vw, 1vh);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.rotateButton, .resetButton {
+    padding: clamp(1vh, 8px, 8px) clamp(2vw, 20px, 20px);
+    background-color: var(--button-color);
+    border: none;
+    border-radius: 30px;
+    min-width: 75px;
+    margin-bottom: min(1vh, 1vw);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(16px, 2.5vw, 20px);
+}
+
+body.dark .rotateButton, body.dark .resetButton {
+    background-color: var(--button-color-dark);
+    color: var(--text-dark);
+}
+
+.selectedShape {
+    align-self: center;
+    display: flex;
+    transform: scale(0.5);
+}
+
+.currentDate {
+    background: var(--current-date-color);
+}
+
+body.dark .currentDate {
+    background: var(--current-date-color-dark);
+}
+
+.winner {
+    font-size: min(5vw, 5vh);
+    color: var(--winner-color);
+    font-weight: 600;
+    margin-bottom: min(3vw, 3vh);
+}
+
+.count {
+    font-size: min(4vw, 4vh);
+    font-weight: 500;
+    margin-bottom: min(3vw, 3vh);
+}

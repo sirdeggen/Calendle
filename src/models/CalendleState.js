@@ -9,6 +9,7 @@ export class CalendleState {
     _winner
     _board
     _placedShapes
+    _darkMode
 
     // constructor instantiates with empty object
     constructor() {
@@ -21,6 +22,7 @@ export class CalendleState {
     get Winner() { return this._winner; }
     get Board() { return this._board; }
     get PlacedShapes() { return this._placedShapes; }
+    get DarkMode() { return this._darkMode; }
 
     // setters
     setDate(val) { this._date = val; return this;}
@@ -28,6 +30,7 @@ export class CalendleState {
     setWinner(val) { this._winner = val; return this;}
     setBoard(val) { this._board = val; return this;}
     setPlacedShapes(val) { this._placedShapes = val; return this;}
+    setDarkMode(val) { this._darkMode = val; return this;}
 
     // initializes object with data from LocalStorage
     initialize() {
@@ -37,6 +40,7 @@ export class CalendleState {
         this._winner = data ? data._winner : Default;
         this._board = data ? data._board : Default;
         this._placedShapes = data ? data._placedShapes : [];
+        this._darkMode = data ? data._darkMode : false;
 
         this.update();
         return this;
@@ -49,6 +53,7 @@ export class CalendleState {
         this._winner = false;
         this._board = [];
         this._placedShapes = [];
+        this._darkMode = false;
         return this;
     }
 
@@ -69,5 +74,4 @@ export class CalendleState {
         this.setWinner(true).update();
         return this;
     }
-
 }
