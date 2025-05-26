@@ -1,12 +1,12 @@
 import { KeyDeriver, PrivateKey } from '@bsv/sdk'
 import { StorageClient, Wallet, WalletSigner, WalletStorageManager, Services } from '@bsv/wallet-toolbox-client'
 
-const serverPrivateKey = process.env.SERVER_PRIVATE_KEY
+const serverPrivateKey = process.env.SERVER_PRIVATE_KEY ?? ''
 
 async function makeWallet (
-    chain,
-    storageURL,
-    privateKey
+    chain: 'main' | 'test',
+    storageURL: string,
+    privateKey: string
   ) {
     const keyDeriver = new KeyDeriver(new PrivateKey(privateKey, 'hex'))
     const storageManager = new WalletStorageManager(keyDeriver.identityKey)
@@ -25,7 +25,7 @@ async function makeWallet (
 
 export default async function savePayment(req, res) {
     const wallet = await makeWallet('main', 'https://storage.babbage.systems', serverPrivateKey)
-    await wallet.isAuthenticated()
+    await wallet.isAuthenticated({}, 'calendle.co')
     const data = req.body
     const response = await wallet.internalizeAction({
         tx: data.tx,

@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Board } from './Board';
-import { Shape } from './Shape';
+import { Board } from './Board.jsx';
+import { Shape } from './Shape.js';
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb';
-import { createGrid, ShapeNames, SHAPES, Months, DaysOfWeek } from '../lib/common';
-import { ThemeContext } from '..';
-import { CalendleStatistics } from '../models/CalendleStatistics';
-import { CalendleState } from '../models/CalendleState';
+import { createGrid, ShapeNames, SHAPES, Months, DaysOfWeek } from '../lib/common.js';
+import { ThemeContext } from '../App.js';
+import { CalendleStatistics } from '../models/CalendleStatistics.js';
+import { CalendleState } from '../models/CalendleState.js';
 import { upsert_solution } from '../api/mongodb/upsert_solution.js';
 
 const getYesterdayDateString = (today) => {

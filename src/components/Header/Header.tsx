@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Stats } from './Stats';
-import { ThemeContext } from '../../index';
+import { ThemeContext } from '../../App';
 import { Settings } from './Settings';
 import '../../styles/header.css';
 

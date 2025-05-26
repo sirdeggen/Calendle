@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ThemeContext } from '../../index';
+import { ThemeContext } from '../../App';
 import { InputSwitch } from 'primereact/inputswitch';
 import '../../styles/settings.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
