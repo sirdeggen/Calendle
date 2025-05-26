@@ -34,13 +34,16 @@ const App = () => {
           throw new Error('Could not authenticate')
         }
         const response = await wallet.listOutputs({
-          basket: 'calendle'
+          basket: 'calendle',
+          include: 'locking scripts'
         })
         console.log(response)
         if (response?.outputs?.length > 0) {
+          console.log({ lockingScript: response.outputs[0].lockingScript })
           const script = Script.fromHex(response.outputs[0].lockingScript ?? '')
-          const pushDrop = PushDrop.decode(script)
-          const date = new Date(Utils.toUTF8(pushDrop.fields[0]))
+          console.log({ script })
+          const date = new Date(Utils.toUTF8(script.chunks[0].data))
+          console.log({ date })
           // ensure the date is from today
           if (date.toDateString() === new Date().toDateString()) {
             setHasPaid(true)
