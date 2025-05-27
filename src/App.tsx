@@ -21,7 +21,13 @@ export const ThemeContext = createContext<ThemeContextType>({
 const App = () => {
   const date = new Date();
   const [statsDialogVisible, setStatsDialogVisible] = useState(false);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    // Check for user's system preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  });
   const [gameState] = useState(new CalendleState());
 
   const [hasPaid, setHasPaid] = useState(false);
@@ -66,6 +72,35 @@ const App = () => {
   useEffect(() => {
     document.body.className = theme;
   }, [theme]);
+
+  // Listen for changes in system theme preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Define listener function
+    const handleChange = (e: MediaQueryListEvent) => {
+      const newTheme = e.matches ? 'dark' : 'light';
+      handleSetTheme(newTheme);
+    };
+    
+    // Add listener for theme changes
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+    } else {
+      // For older browsers
+      mediaQuery.addListener(handleChange);
+    }
+    
+    // Cleanup function
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        // For older browsers
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
 
   const handleSetTheme = (newTheme: string) => {
     setTheme(newTheme);
