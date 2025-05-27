@@ -11,11 +11,29 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
+    fs: {
+      // Allow serving files from one level up from the package root
+      allow: ['..'],
+    },
     proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
+      // For local Netlify development using netlify dev
+      '/.netlify': {
+        target: 'http://localhost:8888',
         changeOrigin: true,
+        secure: false,
+      },
+      // Simple redirect for the savePayment endpoint
+      '/api/savePayment': {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+        rewrite: (path) => '/.netlify/functions/savePayment',
+      },
+      // For any other API requests
+      '/api/': {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\//, '/.netlify/functions/'),
       },
     },
   },

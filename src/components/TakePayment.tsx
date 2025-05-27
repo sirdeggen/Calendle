@@ -90,13 +90,20 @@ export function TakePayment({ wallet }) {
             randomizeOutputs: false
         })
         console.log(payment)
+        
+        // In development, this will be proxied to /.netlify/functions/savePayment via Vite config
+        // In production, Netlify will handle redirecting /api/savePayment to the function
         const response = await (await fetch('/api/savePayment', {
             method: 'POST',
             body: JSON.stringify({
                 tx: payment.tx,
                 outputs
-            })
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })).json()
+        
         console.log(response)
     }
     const [isHovered, setIsHovered] = useState(false);
