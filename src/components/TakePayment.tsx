@@ -83,7 +83,7 @@ export function TakePayment({ wallet }) {
                 },
                 {
                     lockingScript: paymentScript,
-                    satoshis: 100,
+                    satoshis: 125000,
                     outputDescription: 'Calendle Payment'
                 }
             ],

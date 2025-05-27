@@ -42,7 +42,7 @@ const App = () => {
           console.log({ lockingScript: response.outputs[0].lockingScript })
           const script = Script.fromHex(response.outputs[0].lockingScript ?? '')
           console.log({ script })
-          const date = new Date(Utils.toUTF8(script.chunks[0].data))
+          const date = new Date(Utils.toUTF8(script.chunks[0].data ?? []))
           console.log({ date })
           // ensure the date is from today
           if (date.toDateString() === new Date().toDateString()) {
