@@ -33,7 +33,7 @@ const styles = {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         transition: 'all 0.3s ease',
         width: '80%',
-        maxWidth: '300px'
+        maxWidth: '320px'
     },
     buttonHover: {
         backgroundColor: '#3a7bc8',
@@ -131,15 +131,18 @@ export function TakePayment({ wallet, setHasPaid }: TakePaymentProps) {
     
     return (
         <div style={styles.container}>
-            <h3 style={styles.heading}>125,000 satoshis per game</h3>
+            <p>A puzzle game where you must place shapes on a grid to match the target shape.<br />
+            Each day is a new puzzle. Pay using BSV using <a href="https://metanet.bsvb.tech" target="_blank" rel="noopener noreferrer" style={{ color: '#888' }}>Metanet Desktop</a> to unlock today's puzzle.</p>
+            <br />
             <button 
                 onClick={pay}
                 style={{ 
                     ...styles.button,
                 }}
             >
-                Play Now
+                Pay 125k sats to Play Today
             </button>
+            <caption style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: '#888' }}>~$0.05</caption>
         </div>
     )
 }

@@ -253,7 +253,7 @@ export const Game = ({ setStatsDialogVisible }) => {
 
     return (
         <div id={'game'} className='game'>
-            <h1 className={winner && 'winner'}>{count} moves</h1>
+            <h1 className={winner ? 'winner' : undefined}>{count} moves</h1>
             <div className="boardContainer">
                 <div className="board">
                     <Board
