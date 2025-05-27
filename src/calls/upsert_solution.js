@@ -1,4 +1,4 @@
-import { post } from '../common/post';
+import { post } from './common/post';
 
 export const upsert_solution = async (date, board) => {
     
