@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Board } from './Board.js';
+import { Board } from './Board.jsx';
 import { Shape } from './Shape.js';
 import { TbRotateClockwise2, TbArrowsVertical, TbArrowsHorizontal } from 'react-icons/tb';
 import { createGrid, ShapeNames, SHAPES, Months, DaysOfWeek } from '../lib/common.js';
