@@ -23,7 +23,7 @@ async function makeWallet (
   return wallet
 }
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   try {
     // Only allow POST requests
     if (event.httpMethod !== 'POST') {
