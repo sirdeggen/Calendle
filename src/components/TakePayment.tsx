@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PushDrop, PublicKey, Utils, P2PKH, Random } from '@bsv/sdk';
+import { PushDrop, PublicKey, Utils, P2PKH, Random, Beef, Transaction } from '@bsv/sdk';
+import { checkPaymentStatus } from '../utils/paymentUtils';
 
 const serverIdentityKey = '0329dd62d6c5f4cbedd8c99d0120da743250815a15f1308fd6f549a15af4c5fd7f';
 
@@ -41,7 +42,12 @@ const styles = {
     }
 }
 
-export function TakePayment({ wallet }) {
+interface TakePaymentProps {
+    wallet: any;
+    setHasPaid?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function TakePayment({ wallet, setHasPaid }: TakePaymentProps) {
     const pay = async () => {
         const { publicKey: senderIdentityKey } = await wallet.getPublicKey({ identityKey: true })
         const derivationPrefix = Utils.toBase64(Random(8))
@@ -87,10 +93,24 @@ export function TakePayment({ wallet }) {
                     outputDescription: 'Calendle Payment'
                 }
             ],
-            randomizeOutputs: false
+            options: {
+                randomizeOutputs: false
+            }
         })
         console.log(payment)
+    
+
+        const beef = Beef.fromBinary(payment.tx)
+        const tx = beef.findAtomicTransaction(payment.txid) as Transaction;
+
+        // re-get the tokens and unlock the game
+        const isPaid = await checkPaymentStatus(tx, '0');
         
+        // If setHasPaid is provided (from parent component), update the payment status
+        if (setHasPaid && isPaid) {
+            setHasPaid(true);
+        }
+
         // In development, this will be proxied to /.netlify/functions/savePayment via Vite config
         // In production, Netlify will handle redirecting /api/savePayment to the function
         const response = await (await fetch('/api/savePayment', {
@@ -103,10 +123,11 @@ export function TakePayment({ wallet }) {
                 'Content-Type': 'application/json'
             }
         })).json()
+
+        console.log({ response })
         
-        console.log(response)
+        return isPaid;
     }
-    const [isHovered, setIsHovered] = useState(false);
     
     return (
         <div style={styles.container}>
@@ -114,8 +135,7 @@ export function TakePayment({ wallet }) {
             <button 
                 onClick={pay}
                 style={{ 
-                    ...styles.button, 
-                    ...(isHovered ? styles.buttonHover : {}) 
+                    ...styles.button,
                 }}
             >
                 Play Now

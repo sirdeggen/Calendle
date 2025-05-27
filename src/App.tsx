@@ -2,8 +2,10 @@ import React, { useState, useEffect, createContext } from 'react';
 import { Game } from './components/Game';
 import { Header } from './components/Header/Header';
 import { CalendleState } from './models/CalendleState';
-import { WalletClient, Script, PushDrop, Utils } from '@bsv/sdk';
+import { WalletClient } from '@bsv/sdk';
 import { TakePayment } from './components/TakePayment';
+import { checkPaymentStatus } from './utils/paymentUtils';
+import { Beef } from '@bsv/sdk';
 
 // Define theme context with type
 type ThemeContextType = {
@@ -29,32 +31,34 @@ const App = () => {
   useEffect(() => {
     (async () => {
       try {
-        const isAuthenticated = await wallet.isAuthenticated()
+        if (hasPaid) return;
+        const isAuthenticated = await wallet.isAuthenticated();
         if (!isAuthenticated) {
-          throw new Error('Could not authenticate')
+          throw new Error('Could not authenticate');
         }
+        
         const response = await wallet.listOutputs({
           basket: 'calendle',
-          include: 'locking scripts'
-        })
-        console.log(response)
-        if (response?.outputs?.length > 0) {
-          console.log({ lockingScript: response.outputs[0].lockingScript })
-          const script = Script.fromHex(response.outputs[0].lockingScript ?? '')
-          console.log({ script })
-          const date = new Date(Utils.toUTF8(script.chunks[0].data ?? []))
-          console.log({ date })
-          // ensure the date is from today
-          if (date.toDateString() === new Date().toDateString()) {
-            setHasPaid(true)
-          }
-        } 
+          include: 'entire transactions'
+        });
+        
+        if (response?.outputs?.length <= 0) return console.error('No outputs found');
+        
+        const beef = Beef.fromBinary(response?.BEEF || [])
+        const latestTokenOutpoint = response.outputs[response.outputs.length - 1].outpoint
+        console.log({ latestTokenOutpoint })
+        const [txid, vout] = latestTokenOutpoint.split('.')
+        const tx = beef.findAtomicTransaction(txid)
+        if (!tx) return console.error('Could not find transaction');
+        
+        const paid = await checkPaymentStatus(tx, vout);
+        setHasPaid(paid);
       } catch (error) {
-        console.error({ error })
+        console.error({ error });
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    })()
+    })();
   }, [wallet])
 
   gameState.initialize();
@@ -78,7 +82,7 @@ const App = () => {
       ) : hasPaid ? (
         <Game key={date.toDateString()} setStatsDialogVisible={setStatsDialogVisible}/>
       ) : (
-        <TakePayment wallet={wallet}/>
+        <TakePayment wallet={wallet} setHasPaid={setHasPaid} />
       )}
     </ThemeContext.Provider>
   );
