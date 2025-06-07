@@ -89,7 +89,7 @@ export function TakePayment({ wallet, setHasPaid }: TakePaymentProps) {
                 },
                 {
                     lockingScript: paymentScript,
-                    satoshis: 125000,
+                    satoshis: 12500,
                     outputDescription: 'Calendle Payment'
                 }
             ],
@@ -140,9 +140,9 @@ export function TakePayment({ wallet, setHasPaid }: TakePaymentProps) {
                     ...styles.button,
                 }}
             >
-                Pay 125k sats to Play Today
+                Pay 12.5k sats to Play Today
             </button>
-            <caption style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: '#888' }}>~$0.05</caption>
+            <caption style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: '#888' }}>~0.5¢</caption>
         </div>
     )
 }
