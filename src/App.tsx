@@ -2,10 +2,11 @@ import React, { useState, useEffect, createContext } from 'react';
 import { Game } from './components/Game';
 import { Header } from './components/Header/Header';
 import { CalendleState } from './models/CalendleState';
-import { WalletClient } from '@bsv/sdk';
+import { CreateActionInput, LockingScript, PushDrop, WalletClient } from '@bsv/sdk';
 import { TakePayment } from './components/TakePayment';
 import { checkPaymentStatus } from './utils/paymentUtils';
 import { Beef } from '@bsv/sdk';
+import { Transaction } from '@bsv/sdk';
 
 // Define theme context with type
 type ThemeContextType = {
@@ -59,6 +60,48 @@ const App = () => {
         
         const paid = await checkPaymentStatus(tx, vout);
         setHasPaid(paid);
+
+        if (response.outputs.length > 1) {
+          const pd = new PushDrop(wallet, 'calendle.co')
+          const fakeTx = new Transaction()
+          fakeTx.addOutput({
+            satoshis: 1,
+            lockingScript: LockingScript.fromASM('OP_TRUE')
+          })
+          response.outputs.forEach((output) => {
+            const [txid, vout] = output.outpoint.split('.')
+            const sourceOutputIndex = Number(vout)
+            const sourceTransaction = beef.findAtomicTransaction(txid)
+            const unlockingScriptTemplate = pd.unlock(
+              [2, 'calendle'],
+              '1',
+              'self',
+              'none',
+              true,
+              1,
+              LockingScript.fromHex(output.lockingScript as string)
+            )
+            fakeTx.addInput({
+              sourceTransaction,
+              sourceOutputIndex,
+              unlockingScriptTemplate,
+            })
+          })
+          await fakeTx.sign()
+
+          const revokeTx = await wallet.createAction({
+            inputBEEF: response.BEEF,
+            inputs: response.outputs.map((output, idx) => ({
+              outpoint: output.outpoint,
+              inputDescription: 'Calendle Game Token',
+              unlockingScript: fakeTx.inputs[idx].unlockingScript?.toHex()
+            } as CreateActionInput)),
+            description: 'Spend previous tokens',
+            labels: ['calendle']
+          })
+
+          console.log({ revokeTx })
+        }
       } catch (error) {
         console.error({ error });
       } finally {
