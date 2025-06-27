@@ -142,7 +142,7 @@ export function TakePayment({ wallet, setHasPaid }: TakePaymentProps) {
             >
                 Pay 12.5k sats to Play Today
             </button>
-            <caption style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: '#888' }}>~0.5¢</caption>
+            <div style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: '#888' }}>~0.5¢</div>
         </div>
     )
 }
