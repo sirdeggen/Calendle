@@ -46,6 +46,9 @@ const App = () => {
       });
 
       const beef = Beef.fromBinary(response?.BEEF || [])
+
+      let extraTokens = false;
+      let paidAlready = false;
       
       if (response.outputs.length > 1) {
         const pd = new PushDrop(wallet, 'calendle.co')
@@ -54,14 +57,17 @@ const App = () => {
           satoshis: 1,
           lockingScript: LockingScript.fromASM('OP_TRUE')
         })
-        response.outputs.forEach((output) => {
+        response.outputs.forEach(async (output) => {
           const [txid, vout] = output.outpoint.split('.')
           const sourceOutputIndex = Number(vout)
           const sourceTransaction = beef.findAtomicTransaction(txid)
           const ls = sourceTransaction?.outputs[sourceOutputIndex].lockingScript as LockingScript
-          const paid = checkPaymentStatus(sourceTransaction as Transaction, vout)
-          if (!paid) return;
-          setHasPaid(true);
+          const paid = await checkPaymentStatus(sourceTransaction as Transaction, vout)
+          if (paid) {
+            paidAlready = true;
+            return
+          }
+          extraTokens = true;
           const unlockingScriptTemplate = pd.unlock(
             [2, 'calendle'],
             '1',
@@ -78,6 +84,10 @@ const App = () => {
             unlockingScriptTemplate,
           })
         })
+
+        if (paidAlready) setHasPaid(true);
+        if (!extraTokens) return;
+        
         await fakeTx.sign()
 
         console.log({ fakeTx: fakeTx.toHex() })
